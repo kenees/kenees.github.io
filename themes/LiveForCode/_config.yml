@@ -9,9 +9,9 @@ GitHubRepositories: Hexo-LiveForCodex
 # 博主名称, 文章后缀和主页图片上都会使用此名称
 BlogUser: Kenevy
 # 用户头像URL
-BlogAvatar: https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/sidebar/avatar.jpg
+BlogAvatar: https://avatars.githubusercontent.com/u/38529839?v=4
 # 创建时间
-BlogStartDate: "2020-01-01"
+BlogStartDate: "2020-06-03"
 
 
 # ---- 网站配置 ----
@@ -146,16 +146,16 @@ MenuList:
   -
     name: 归档
     href: /archive
-  -
-    name: 赞赏
-    href: /donate
-  -
-    name: 关于
-    href: /about
-  -
-    name: 订阅
-    href: /atom.xml
-    target: _blank
+  # -
+  #   name: 赞赏
+  #   href: /donate
+  # -
+  #   name: 关于
+  #   href: /about
+  # -
+  #   name: 订阅
+  #   href: /atom.xml
+  #   target: _blank
   -
     name: 搜索
     href: ""
@@ -194,7 +194,7 @@ BottomText:
   # 图标右侧文字
   right: 何事秋风悲画扇  
 # 是否显示主题信息
-ThemeInfo: true 
+ThemeInfo: false 
 
 
 # ---- 控制台输出 ----
@@ -227,7 +227,7 @@ Code:
   style: normal
 
 
-# ---- Algolia配置 ----
+# ---- Algolia配置(搜索) ----
 Search:
   applicationID: 010C3EANT8
   apiKey: c7abab9f11b79102b9aff7fe6d41447d
@@ -240,8 +240,7 @@ Search:
     stats: ${hits} 条相关条目，使用了 ${time} 毫秒
 
 
-# ---- Valine配置 ----
-  # token EMt8N9Sn1ej1s11n0PJDJGSa8YJ43JXzFtyiRp7yoceIEoUH59CEOufUa9LEOs5w-cn-n1
+# ---- Valine配置(文章统计)----
 Valine: 
   switch: true
   el: .comments-content

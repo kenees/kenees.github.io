@@ -2,6 +2,10 @@
 title: Git安装及使用
 date: 2021-06-03 15:40:08
 tags:
+  - Git
+categories:
+  - Git
+
 ---
 Git安装教程及日常开发常用命令
 
