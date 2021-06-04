@@ -105,3 +105,10 @@ deploy:
   type: git
   repo: git@github.com:kenevy/kenevy.github.io.git
   branch: main
+
+
+# search
+algolia:
+  applicationID: TMOKSN5WPG
+  apiKey: 4a5991d5fa55b319b0fa5683e8f9391b
+  indexName: Notes

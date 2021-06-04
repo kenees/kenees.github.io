@@ -229,8 +229,10 @@ Code:
 
 # ---- Algolia配置(搜索) ----
 Search:
-  applicationID: 010C3EANT8
-  apiKey: c7abab9f11b79102b9aff7fe6d41447d
+  # applicationID: 010C3EANT8
+  # apiKey: c7abab9f11b79102b9aff7fe6d41447d
+  applicationID: TMOKSN5WPG
+  apiKey: 4a5991d5fa55b319b0fa5683e8f9391b
   indexName: Notes
   hits:
     page: 10
