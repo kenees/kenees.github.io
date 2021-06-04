@@ -10,6 +10,7 @@ hexo deploye / hexo d
 
 ## 上传搜索
     npm install --save hexo-algolia
+    
 
     [1]站点配置： 
         algolia:
@@ -20,3 +21,6 @@ hexo deploye / hexo d
         export HEXO_ALGOLIA_INDEXING_KEY=Admin API Key
     [3]执行命令更新INDEX
         hexo algolia
+        // --flush不是第一次提交设置为true
+        // --layouts page/post
+        hexo algolia --flush true --layouts post

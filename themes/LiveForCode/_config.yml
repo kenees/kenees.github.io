@@ -227,7 +227,7 @@ Code:
   style: normal
 
 
-# ---- Algolia配置(搜索) ----
+# ---- Algolia配置(搜索Algolia) ----
 Search:
   # applicationID: 010C3EANT8
   # apiKey: c7abab9f11b79102b9aff7fe6d41447d
@@ -242,7 +242,7 @@ Search:
     stats: ${hits} 条相关条目，使用了 ${time} 毫秒
 
 
-# ---- Valine配置(文章统计)----
+# ---- Valine配置(文章统计LeanCloud)----
 Valine: 
   switch: true
   el: .comments-content
@@ -343,7 +343,8 @@ APlayer:
       lrc: /music/lrc/好想大声说爱你.lrc
 # Meting
 Meting:
-  id: "3778678" 
+  # id: "3778678" 
+  id: "114112095"
   lrcshow: false 
   server: netease 
   type: playlist 
