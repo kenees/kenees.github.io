@@ -24,7 +24,7 @@ WebsiteTitleFocus: (*´∇｀*) 欢迎回来!
 # 当前页获取焦点, 页面title变化, 延时时间, 单位毫秒
 WebsiteTitleFocusTimeOut: 1000
 # 网站图标
-WebsiteFavicon: http://www.chengzi.run:888/static/image/website/logo.png
+WebsiteFavicon: https://www.chengzi.run/blog_hexo_static/image/website/logo.png
 
 
 # ---- 进度条配置 ----
@@ -113,8 +113,8 @@ BackAnimation:
 # ---- 主页配置 ----
 # 主页图片URL, 推荐尺寸 >= 1920 * 1080, 支持多张, 每次刷新随机设置一张
 HomeHeaderImage: 
-  - http://www.chengzi.run:888/static/image/header/home.jpg
-  - http://www.chengzi.run:888/static/image/header/home.jpeg
+  - https://www.chengzi.run/blog_hexo_static/image/header/home.jpg
+  - https://www.chengzi.run/blog_hexo_static/image/header/home.jpeg
 # 主页头图上的标语, 设置此选项会固定显示文字, 默认为空, 自动获取一句
 HomeBannerText: ""
 
@@ -122,7 +122,7 @@ HomeBannerText: ""
 # ---- 文章详情页配置 ----
 # 文章详情页图片URL, 支持多张, 每次刷新随机设置一张
 ArticleHeaderImage: 
-  - http://www.chengzi.run:888/static/image/header/article.jpg
+  - https://www.chengzi.run/blog_hexo_static/image/header/article.jpg
 
 
 # ---- 其他页面配置 ----
@@ -218,8 +218,8 @@ FontIconExtend: ""
 Donate: 
   paypal : ""
   bitcoin: ""
-  alipay : http://www.chengzi.run:888/static/image/donate/alipay.png
-  wechat : http://www.chengzi.run:888/static/image/donate/wechat.png
+  alipay : https://www.chengzi.run/blog_hexo_static/image/donate/alipay.png
+  wechat : https://www.chengzi.run/blog_hexo_static/image/donate/wechat.png
 
 
 # ---- Code Style ----
@@ -273,7 +273,7 @@ Tocbot:
 
 # ---- Require配置 ----
 Require:
-  baseUrl: http://www.chengzi.run:888/static/js/
+  baseUrl: https://www.chengzi.run/blog_hexo_static/js/
   waitSeconds: 100
 
 
@@ -359,50 +359,50 @@ Meting:
 
 # ---- Lazy Load ----
 LazyLoad:
-  default: http://www.chengzi.run:888/static/image/website/lazyload.svg
+  default: https://www.chengzi.run/blog_hexo_static/image/website/lazyload.svg
 
 
 # ---- Style配置 ----
 Style:
-  aplayer: http://www.chengzi.run:888/static/css/APlayer.css
-  archive: http://www.chengzi.run:888/static/css/archive.css
-  donate: http://www.chengzi.run:888/static/css/donate.css
-  fancybox: http://www.chengzi.run:888/static/css/jquery.fancybox.css
-  footer: http://www.chengzi.run:888/static/css/footer.css
+  aplayer: https://www.chengzi.run/blog_hexo_static/css/APlayer.css
+  archive: https://www.chengzi.run/blog_hexo_static/css/archive.css
+  donate: https://www.chengzi.run/blog_hexo_static/css/donate.css
+  fancybox: https://www.chengzi.run/blog_hexo_static/css/jquery.fancybox.css
+  footer: https://www.chengzi.run/blog_hexo_static/css/footer.css
   iconfont: https://at.alicdn.com/t/font_1546312_l3yohatebw.css
-  index: http://www.chengzi.run:888/static/css/index.css
-  menuBubble: http://www.chengzi.run:888/static/css/menu-bubble.css
-  page: http://www.chengzi.run:888/static/css/page.css
-  post: http://www.chengzi.run:888/static/css/post.css
-  search: http://www.chengzi.run:888/static/css/search.css
-  tocbot: http://www.chengzi.run:888/static/css/tocbot.css
-  normal: http://www.chengzi.run:888/static/css/normal.css
-  night: http://www.chengzi.run:888/static/css/night.css
-  clipboard: http://www.chengzi.run:888/static/css/clipboard.css
+  index: https://www.chengzi.run/blog_hexo_static/css/index.css
+  menuBubble: https://www.chengzi.run/blog_hexo_static/css/menu-bubble.css
+  page: https://www.chengzi.run/blog_hexo_static/css/page.css
+  post: https://www.chengzi.run/blog_hexo_static/css/post.css
+  search: https://www.chengzi.run/blog_hexo_static/css/search.css
+  tocbot: https://www.chengzi.run/blog_hexo_static/css/tocbot.css
+  normal: https://www.chengzi.run/blog_hexo_static/css/normal.css
+  night: https://www.chengzi.run/blog_hexo_static/css/night.css
+  clipboard: https://www.chengzi.run/blog_hexo_static/css/clipboard.css
 
 # ---- Script配置 ----
 Script:
-  aplayer: http://www.chengzi.run:888/static/js/APlayer.min.js
-  config: http://www.chengzi.run:888/static/js/require.config.js
-  index: http://www.chengzi.run:888/static/js/index.js
-  instantSearch: http://www.chengzi.run:888/static/js/instantsearch.min.js
-  jQuery: http://www.chengzi.run:888/static/js/jquery-3.4.1.min.js
-  loading: http://www.chengzi.run:888/static/js/loading.js
-  meting: http://www.chengzi.run:888/static/js/Meting.min.js
-  iscroll: http://www.chengzi.run:888/static/js/iscroll.js
-  require: http://www.chengzi.run:888/static/js/require.min.js
+  aplayer: https://www.chengzi.run/blog_hexo_static/js/APlayer.min.js
+  config: https://www.chengzi.run/blog_hexo_static/js/require.config.js
+  index: https://www.chengzi.run/blog_hexo_static/js/index.js
+  instantSearch: https://www.chengzi.run/blog_hexo_static/js/instantsearch.min.js
+  jQuery: https://www.chengzi.run/blog_hexo_static/js/jquery-3.4.1.min.js
+  loading: https://www.chengzi.run/blog_hexo_static/js/loading.js
+  meting: https://www.chengzi.run/blog_hexo_static/js/Meting.min.js
+  iscroll: https://www.chengzi.run/blog_hexo_static/js/iscroll.js
+  require: https://www.chengzi.run/blog_hexo_static/js/require.min.js
 
 
 # ---- Font配置 ----
 Font:
-  LongCang: http://www.chengzi.run:888/static/font/LongCang.css
-  Monda: http://www.chengzi.run:888/static/font/Monda.css
-  NotoSansSC: http://www.chengzi.run:888/static/font/NotoSansSC.css
-  Playball: http://www.chengzi.run:888/static/font/Playball.css
-  PTMono: http://www.chengzi.run:888/static/font/PTMono.css
-  RobotoSlab: http://www.chengzi.run:888/static/font/RobotoSlab.css
-  Rosario: http://www.chengzi.run:888/static/font/Rosario.css
-  UbuntuMono: http://www.chengzi.run:888/static/font/UbuntuMono.css
+  LongCang: https://www.chengzi.run/blog_hexo_static/font/LongCang.css
+  Monda: https://www.chengzi.run/blog_hexo_static/font/Monda.css
+  NotoSansSC: https://www.chengzi.run/blog_hexo_static/font/NotoSansSC.css
+  Playball: https://www.chengzi.run/blog_hexo_static/font/Playball.css
+  PTMono: https://www.chengzi.run/blog_hexo_static/font/PTMono.css
+  RobotoSlab: https://www.chengzi.run/blog_hexo_static/font/RobotoSlab.css
+  Rosario: https://www.chengzi.run/blog_hexo_static/font/Rosario.css
+  UbuntuMono: https://www.chengzi.run/blog_hexo_static/font/UbuntuMono.css
 
 
 # ---- 文章尾缀配置 ----
