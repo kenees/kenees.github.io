@@ -47,8 +47,9 @@ GitHub无法上传超过100MB的文件， 需要使用lfs工具转变上传大�
 
 整体流程：
   1. git lfs track *.zip  // 已经添加过了就不需要执行
-  2. git add big.zip 
-  3. git commit -am 'add the big file'
-  4. git add . 
-  5. git commit -am 'add other file'
-  6. git push
+  2. git commit -am 'update gitattributes'
+  3. git add big.zip 
+  4. git commit -am 'add the big file'
+  5. git add . 
+  6. git commit -am 'add other file'
+  7. git push
