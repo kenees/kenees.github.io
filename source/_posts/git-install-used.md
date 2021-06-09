@@ -87,3 +87,15 @@ $ git tag -d tagname                               // 删除tag
 ``` bash
 $ git push origin :refs/tags/<tagname>             // 删除远程tag
 ```
+``` bash
+$ git stash save "save massage"                    // 执行存储,添加备注,只有git stash也可以
+$ git stash list                                   // 查看stash了哪些存储
+$ git stash show                                   // 显示做了哪些改动， 默认显示第一个, 如果需要显示其他存储，后面加stash@{$num}, egg: git stash show stash@{1}
+$ git stash show -p                                // 查看存储改动内容， 默认显示第一个，如果需要显示其他存储，中间加stash@{$num}, egg: git stash show stash@{1} -p
+$ git stash apply                                  // 应用某个存储， 但是不会从列表中删除，默认第一个， 如果需要显示其他存储，后面加stash@{$num}, egg: git stash apply stash@{1}
+$ git stash pop                                    // 回复支持缓存的工资目录， 并删除， 将修改应用到当前目录下，默认第一个，其他同上
+$ git stash drop                                   // 丢弃存储， 默认第一个，其他同上
+$ git stash clear                                  // 删除所有缓存的stash
+
+* 注意：新增的文件无法stash，需要git add添加进版本库后才能保存到stash
+```
