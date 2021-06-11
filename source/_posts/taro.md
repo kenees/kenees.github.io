@@ -55,6 +55,12 @@ $ . taro1.3.05/bin/activate
 ```
 ### 2.6 退出虚拟环境
 ```
-(taro1.3.25) $ deactivate_node
+(taro1.3.05) $ deactivate_node
 $ 
+```
+### 2.7 taro设置别名
+```
+alias taro1305='.~/taro1.3.25/bin/active'
+$ taro1305
+(taro1.3.05) $
 ```
