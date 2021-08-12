@@ -109,6 +109,8 @@ deploy:
 
 # search
 algolia:
-  applicationID: TMOKSN5WPG
-  apiKey: 4a5991d5fa55b319b0fa5683e8f9391b
+  # applicationID: TMOKSN5WPG
+  applicationID: SK710PA2AC
+  # apiKey: 4a5991d5fa55b319b0fa5683e8f9391b
+  apiKey: 765693a7f9bfa264d63155fdc6bcf68c
   indexName: Notes
