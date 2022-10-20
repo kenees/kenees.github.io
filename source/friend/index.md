@@ -40,10 +40,13 @@ friends  :
         avatar  : https://cdn.jsdelivr.net/gh/first19326/hexo-liveforcode@master/static/image/sidebar/avatar.jpg
         url     : https://notes.worstone.cn
         about   : Live For Code 作者
+      -
+        name    : chengeheng
+        avatar  : https://avatars.githubusercontent.com/u/23338973?s=40&v=4
+        url     : https://chengeheng.github.io/
+        about   : 
 ---
 > 欢迎各位朋友前来交换友链，本站友链接受以下类型的网站：
 > - 个人博客
 > - 公益组织等非盈利性网站
 > - 不接受广告、商业性网站，特殊情况除外
-> 
-> 如果你的网站 __一个月以上无法正常访问__ 将会被移除。
