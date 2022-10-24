@@ -1,18 +1,18 @@
 ---
 title: GitLab CI/CD工作流程
 date: 2022-10-19 15:17:19
-categories:
-  - 工具
-  - 自动部署
 tags:
   - GitLab
   - Web
   - CI/CD
+  - 自动部署
+categories:
+  - 工具
 ---
 日常工作中总想着偷懒， 能自动化的东西绝不手动操作。所以研究了下GitLab上的CI/CD工作流来解放双手。
 
 # 1. 工作流简介
-![](/cicd/1.png)
+![](/assets/cicd/1.png)
 大致思路就是先在gitlab中创建工作流（具体操作后面讲）, 而工作流会因为一些操作而触发， 比如push, merge；触发工作流后具体的操作类似打包，拷贝， 删除， 发布就需要有一个地方来执行(runner)， 这样就实现自动化操作了。
 # 2. 实现流程
 ## 2.1 gitlab中创建工作流
@@ -61,7 +61,7 @@ tags:
     ```
 Pipeline是Gitlab根据项目的.gitlab-ci.yml文件执行的流程，它由许多个任务节点组成, 而这些Pipeline上的每一个任务节点，都是一个独立的Job。每个Job都会配置一个stage属性，来表示这个Job所处的阶段。一个Pipleline有若干个stage,每个stage上有至少一个Job，如下图所示：
 
-![](/cicd/2.webp)
+![](/assets/cicd/2.webp)
 
 ## 2.2 创建Runner
 Runner可以理解为：在特定机器上根据项目的.gitlab-ci.yml文件，对项目执行pipeline的程序。Runner可以分为两种： Specific Runner 和 Shared Runner
@@ -86,7 +86,7 @@ Shared Runner 和 Specific Runner的区别
        3.5 runner运行的环境， 这边填写docker
        3.6 指定运行基础环境， 因为是前端部署， 这边就填写node:16
     4. 注册成功后可在配置中查看， 绑定成功即可看到， 否则未绑定成功
-    ![](/cicd/4.png)
+    ![](/assets/cicd/4.png)
 
 
 ## 2.3 gitlab-ci.yml配置关键字
