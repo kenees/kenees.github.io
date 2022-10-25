@@ -58,6 +58,9 @@ $ git checkout -b feature origin feature           // 切换到远程feature分�
 $ git branch -a                                    // 查看分支(-a 查看远程分支)
 ```
 ``` bash
+$ git remote update origin --prune                 // 更新git branch -a 查看的远程分支列表
+```
+``` bash
 $ git branch -d branchname                         // 删除本地分支
 ```
 ``` bash
