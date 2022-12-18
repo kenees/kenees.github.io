@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>GitLab CI/CD工作流程</title>
+
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="/assets/hexo/css/normal.css">
+    
+
+    <script type="text/javascript" src="/assets/hexo/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">GitLab CI/CD工作流程</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2022-10-19
+                        </span>
+                        
+                            <span id="/2022/10/19/gitlab-cicd/" class="leancloud_visitors" data-flag-title="GitLab CI/CD工作流程">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2022/10/19/gitlab-cicd/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <p>日常工作中总想着偷懒， 能自动化的东西绝不手动操作。所以研究了下GitLab上的CI/CD工作流来解放双手。</p>
+<h1 id="1-工作流简介"><a href="#1-工作流简介" class="headerlink" title="1. 工作流简介"></a>1. 工作流简介</h1><p><img src="/assets/cicd/1.png" alt="&#39;&#39;"><br>大致思路就是先在gitlab中创建工作流（具体操作后面讲）, 而工作流会因为一些操作而触发， 比如push, merge；触发工作流后具体的操作类似打包，拷贝， 删除， 发布就需要有一个地方来执行(runner)， 这样就实现自动化操作了。</p>
+<h1 id="2-实现流程"><a href="#2-实现流程" class="headerlink" title="2. 实现流程"></a>2. 实现流程</h1><h2 id="2-1-gitlab中创建工作流"><a href="#2-1-gitlab中创建工作流" class="headerlink" title="2.1 gitlab中创建工作流"></a>2.1 gitlab中创建工作流</h2><p>在项目根目录下创建.gitlab-ci.yml文件，gitlab会自动检测项目中是否有这个文件, 检测到后就可以在CI/CD中出现流水线列表.<br>    .gitlab-ci.yml格式如下</p>
+<pre><code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">stages:</span><br><span class="line">    - install</span><br><span class="line">    - build</span><br><span class="line">    - deploy</span><br><span class="line"></span><br><span class="line">cache:</span><br><span class="line">    key: modules-cache</span><br><span class="line">    paths:</span><br><span class="line">        - node_modules</span><br><span class="line">        - build</span><br><span class="line">    </span><br><span class="line">job_install:</span><br><span class="line">    stage: install</span><br><span class="line">    tags:</span><br><span class="line">        - test</span><br><span class="line">    only:</span><br><span class="line">        - develop</span><br><span class="line">    script:</span><br><span class="line">        - yarn install</span><br><span class="line"></span><br><span class="line">job_build:</span><br><span class="line">    stage: build</span><br><span class="line">    tags:</span><br><span class="line">        - test</span><br><span class="line">    only:</span><br><span class="line">        - develop</span><br><span class="line">    script:</span><br><span class="line">        - yarn build</span><br><span class="line"></span><br><span class="line">job_deploy:</span><br><span class="line">    stage: deploy</span><br><span class="line">    image: node</span><br><span class="line">    tags:</span><br><span class="line">        - test</span><br><span class="line">    only:</span><br><span class="line">        - develop</span><br><span class="line">    script:</span><br><span class="line">        - ls</span><br></pre></td></tr></table></figure>
+</code></pre>
+<p>Pipeline是Gitlab根据项目的.gitlab-ci.yml文件执行的流程，它由许多个任务节点组成, 而这些Pipeline上的每一个任务节点，都是一个独立的Job。每个Job都会配置一个stage属性，来表示这个Job所处的阶段。一个Pipleline有若干个stage,每个stage上有至少一个Job，如下图所示：</p>
+<p><img src="/assets/cicd/2.webp"></p>
+<h2 id="2-2-创建Runner"><a href="#2-2-创建Runner" class="headerlink" title="2.2 创建Runner"></a>2.2 创建Runner</h2><p>Runner可以理解为：在特定机器上根据项目的.gitlab-ci.yml文件，对项目执行pipeline的程序。Runner可以分为两种： Specific Runner 和 Shared Runner</p>
+<ul>
+<li>Shared Runner是Gitlab平台提供的免费使用的runner程序，它由Google云平台提供支持，每个开发团队有十几个。对于公共开源项目是免费使用的，如果是私人项目则有每月2000分钟的CI时间上限。</li>
+<li>Specific Runner是我们自定义的，在自己选择的机器上运行的runner程序，gitlab给我们提供了一个叫gitlab-runner的命令行软件，只要在对应机器上下载安装这个软件，并且运行gitlab-runner register命令，然后输入从gitlab-ci交互界面获取的token进行注册, 就可以在自己的机器上远程运行pipeline程序了。</li>
+</ul>
+<p>Shared Runner 和 Specific Runner的区别</p>
+<ul>
+<li>Shared Runner是所有项目都可以使用的，而Specific Runner只能针对特定项目运行</li>
+<li>Shared Runner默认基于docker运行，没有提前装配的执行pipeline的环境，例如node等。而Specific Runner你可以自由选择平台，可以是各种类型的机器，如Linux/Windows等，并在上面装配必需的运行环境，当然也可以选择Docker/K8s等</li>
+<li>私人项目使用Shared Runner受运行时间的限制，而Specific Runner的使用则是完全自由的。</li>
+</ul>
+<h3 id="2-2-1-使用docker在服务器上安装runner"><a href="#2-2-1-使用docker在服务器上安装runner" class="headerlink" title="2.2.1 使用docker在服务器上安装runner"></a>2.2.1 使用docker在服务器上安装runner</h3><ol>
+<li>先安装镜像： docker run -d –name gitlab-runner –restart always -v /src/gitlab-runner/config:/etc/gitlab-runner -v /var/run/docker.sock:/var/run/docker.sock gitlab/gitlab-runner:latest</li>
+<li>再进入镜像文件中将需要监听的流程绑定上： docker exec -it gitlab-runner gitlab-runner register</li>
+<li>此时会要求输入一些参数，按照步骤如下<br> 3.1 代码库所在域名 <a target="_blank" rel="noopener" href="https://gitlab.com/">https://gitlab.com</a><br> 3.2 项目token， gitlab的在设置-CI/CD-一般流水线-Runner令牌<br> 3.3 runner描述， 不重要可自行编写<br> 3.4 为当前runner添加标签， 该标签会在gitlab-ci.yml中使用， 需要统一可以随便填写<br> 3.5 runner运行的环境， 这边填写docker<br> 3.6 指定运行基础环境， 因为是前端部署， 这边就填写node:16    4. 注册成功后可在配置中查看， 绑定成功即可看到， 否则未绑定成功<br><img src="/assets/cicd/4.png"></li>
+</ol>
+<h2 id="2-3-gitlab-ci-yml配置关键字"><a href="#2-3-gitlab-ci-yml配置关键字" class="headerlink" title="2.3 gitlab-ci.yml配置关键字"></a>2.3 gitlab-ci.yml配置关键字</h2><p>gitlab提供了很多配置关键字，其中最基础和常用的有这么几个</p>
+<ul>
+<li>stages</li>
+<li>stage</li>
+<li>script</li>
+<li>tags</li>
+</ul>
+<h4 id="stages-amp-stage"><a href="#stages-amp-stage" class="headerlink" title="stages &amp; stage"></a>stages &amp; stage</h4><p>stages定义在YML文件的最外层，它的值是一个数组，用于定义一个pipeline不同的流程节点<br>stage是一个字符串， 表示的是当前的pipeline节点。</p>
+<h4 id="script"><a href="#script" class="headerlink" title="script"></a>script</h4><p>它是当前pipeline节点运行的shell脚本（以项目根目录为上下文执行）。</p>
+<h4 id="tags"><a href="#tags" class="headerlink" title="tags"></a>tags</h4><p>tags是当前Job的标记，这个tags关键字是很重要，因为gitlab的runner会通过tags去判断能否执行当前这个Job</p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://avatars.githubusercontent.com/u/38529839?v=4" alt="Kenevy">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Kenevy
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2022/10/19/gitlab-cicd/" target="_blank">GitLab CI/CD工作流程</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：简单地活着, 肆意又精彩.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Live For Code</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categorie/%E5%B7%A5%E5%85%B7/">工具</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tag/GitLab/">GitLab</a>
+                
+                    <a href="/tag/Web/">Web</a>
+                
+                    <a href="/tag/CI-CD/">CI/CD</a>
+                
+                    <a href="/tag/%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2/">自动部署</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2022/10/24/cpmpress/" class="prev-prefix">« </a> 上一篇：    <a href="/2022/10/24/cpmpress/" title="发布于 2022-10-24 02:40">linux中的常用压缩命令</a>
+                <br>
+            
+            
+                <a href="/2021/08/12/fix-memory-increase/" class="next-prefix">» </a> 下一篇：    <a href="/2021/08/12/fix-memory-increase/" title="发布于 2021-08-12 02:40">网页崩溃及卡顿Bug修复</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/css/search.css">
+<script type="text/javascript" src="/assets/hexo/js/iscroll.js"></script>
+<script type="text/javascript" src="/assets/hexo/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="/assets/hexo/css/APlayer.css">
+        <script type="text/javascript" src="/assets/hexo/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="/assets/hexo/js/Meting.min.js"></script>
+        <meting-js id="114112095" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'first19326',
+        GitHubRepositories : 'Hexo-LiveForCodex',
+
+        BlogUser      : 'Kenevy',
+        BlogAvatar    : 'https://avatars.githubusercontent.com/u/38529839?v=4',
+        BlogStartDate : '2020-06-03',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Live For Code',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : '/assets/hexo/image/website/logo.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                '/assets/hexo/image/header/home.jpg',
+            
+                '/assets/hexo/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                '/assets/hexo/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '归档',
+                    href   : '/archive',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/kenevy'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : false,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '/assets/hexo/image/donate/alipay.png',
+            wechat  : '/assets/hexo/image/donate/wechat.png'
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : 'SK710PA2AC',
+            apiKey        : '765693a7f9bfa264d63155fdc6bcf68c',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'YSr7AcO1kAh7V5oideEUz4Sy-gzGzoHsz',
+            appKey         : 'hWlOkQDUaq0gQCfzaNU7Ta9T',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : '/assets/hexo/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '114112095', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : '/assets/hexo/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : '/assets/hexo/css/APlayer.css',
+            archive          : '/assets/hexo/css/archive.css',
+            donate           : '/assets/hexo/css/donate.css',
+            fancybox         : '/assets/hexo/css/jquery.fancybox.css',
+            footer           : '/assets/hexo/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : '/assets/hexo/css/index.css',
+            menuBubble       : '/assets/hexo/css/menu-bubble.css',
+            page             : '/assets/hexo/css/page.css',
+            post             : '/assets/hexo/css/post.css',
+            search           : '/assets/hexo/css/search.css',
+            tocbot           : '/assets/hexo/css/tocbot.css',
+            normal           : '/assets/hexo/css/normal.css',
+            night            : '/assets/hexo/css/night.css',
+            clipboard        : '/assets/hexo/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : '/assets/hexo/js/APlayer.min.js',
+            config           : '/assets/hexo/js/require.config.js',
+            index            : '/assets/hexo/js/index.js',
+            instantSearch    : '/assets/hexo/js/instantsearch.min.js',
+            jQuery           : '/assets/hexo/js/jquery-3.4.1.min.js',
+            loading          : '/assets/hexo/js/loading.js',
+            meting           : '/assets/hexo/js/Meting.min.js',
+            iscroll          : '/assets/hexo/js/iscroll.js',
+            require          : '/assets/hexo/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : '/assets/hexo/font/LongCang.css',
+            Monda      : '/assets/hexo/font/Monda.css',
+            NotoSansSC : '/assets/hexo/font/NotoSansSC.css',
+            Playball   : '/assets/hexo/font/Playball.css',
+            PTMono     : '/assets/hexo/font/PTMono.css',
+            RobotoSlab : '/assets/hexo/font/RobotoSlab.css',
+            Rosario    : '/assets/hexo/font/Rosario.css',
+            UbuntuMono : '/assets/hexo/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '简单地活着, 肆意又精彩.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Live For Code'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="/assets/hexo/js/index.js"></script>
+</body>
+</html>

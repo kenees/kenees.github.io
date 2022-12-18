@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>Taro多版本管理</title>
+
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="/assets/hexo/css/normal.css">
+    
+
+    <script type="text/javascript" src="/assets/hexo/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">Taro多版本管理</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-06-11
+                        </span>
+                        
+                            <span id="/2021/06/11/taro/" class="leancloud_visitors" data-flag-title="Taro多版本管理">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/06/11/taro/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <p>Taro多版本管理</p>
+<h2 id="1-环境安装"><a href="#1-环境安装" class="headerlink" title="1. 环境安装"></a>1. 环境安装</h2><p>Taro多版本管理利用的是Python的一个包(nodeenv)来实现的，但它实现的是创建node的虚拟环境，与python的虚拟环境类似。<br>首先需要保证本地环境安装了python，mac及linux系统自带2.x版本的python，windows环境需要自己安装。</p>
+<h3 id="1-1-安装nodeenv"><a href="#1-1-安装nodeenv" class="headerlink" title="1.1 安装nodeenv"></a>1.1 安装nodeenv</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install nodeenv</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-在当前路径下创建虚拟node环境"><a href="#1-2-在当前路径下创建虚拟node环境" class="headerlink" title="1.2 在当前路径下创建虚拟node环境"></a>1.2 在当前路径下创建虚拟node环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nodeenv --node=system taro1.3.05</span><br></pre></td></tr></table></figure>
+
+<p>–node=system表示利用当前系统中的node创建虚拟环境，即不独立安装node，且在虚拟环境下能访问到系统node安装的全局工具包</p>
+<p>taro1.3.05是要创建的虚拟环境的文件夹名称</p>
+<h2 id="2-使用"><a href="#2-使用" class="headerlink" title="2. 使用"></a>2. 使用</h2><h3 id="2-1-启动虚拟环境"><a href="#2-1-启动虚拟环境" class="headerlink" title="2.1 启动虚拟环境"></a>2.1 启动虚拟环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">. taro1.3.05/bin/activate</span><br></pre></td></tr></table></figure>
+
+<p>启动后提示符</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(taro1.3.05) $</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-在虚拟环境下安装指定版本的taro"><a href="#2-2-在虚拟环境下安装指定版本的taro" class="headerlink" title="2.2 在虚拟环境下安装指定版本的taro"></a>2.2 在虚拟环境下安装指定版本的taro</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(taro1.3.05)  $ npm install -g @tarojs/cli@1.3.05</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-安装完成后查看版本"><a href="#2-3-安装完成后查看版本" class="headerlink" title="2.3 安装完成后查看版本"></a>2.3 安装完成后查看版本</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(taro1.3.05) $ taro -V</span><br><span class="line">👽 Taro v1.3.05</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-查看taro安装位置"><a href="#2-4-查看taro安装位置" class="headerlink" title="2.4 查看taro安装位置"></a>2.4 查看taro安装位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(taro1.3.05) $ which taro</span><br><span class="line">/Users/yogo/taro1.3.25/bin/taro</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-正常启动"><a href="#2-5-正常启动" class="headerlink" title="2.5 正常启动"></a>2.5 正常启动</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(taro1.3.05) $ yarn dev:weapp</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6-退出虚拟环境"><a href="#2-6-退出虚拟环境" class="headerlink" title="2.6 退出虚拟环境"></a>2.6 退出虚拟环境</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(taro1.3.05) $ deactivate_node</span><br><span class="line">$ </span><br></pre></td></tr></table></figure>
+
+<h3 id="2-7-taro设置别名"><a href="#2-7-taro设置别名" class="headerlink" title="2.7 taro设置别名"></a>2.7 taro设置别名</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alias taro1305=&#x27;.~/taro1.3.25/bin/active&#x27;</span><br><span class="line">$ taro1305</span><br><span class="line">(taro1.3.05) $</span><br></pre></td></tr></table></figure>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://avatars.githubusercontent.com/u/38529839?v=4" alt="Kenevy">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Kenevy
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/06/11/taro/" target="_blank">Taro多版本管理</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：简单地活着, 肆意又精彩.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Live For Code</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categorie/%E5%89%8D%E7%AB%AF/">前端</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tag/Taro/">Taro</a>
+                
+                    <a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a>
+                
+                    <a href="/tag/%E8%B7%A8%E7%AB%AF/">跨端</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/06/17/g++/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/06/17/g++/" title="发布于 2021-06-17 02:40">Windows下gcc/g++的安装与配置</a>
+                <br>
+            
+            
+                <a href="/2021/06/09/git-lfs/" class="next-prefix">» </a> 下一篇：    <a href="/2021/06/09/git-lfs/" title="发布于 2021-06-09 10:40">Git大文件上传</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/css/search.css">
+<script type="text/javascript" src="/assets/hexo/js/iscroll.js"></script>
+<script type="text/javascript" src="/assets/hexo/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="/assets/hexo/css/APlayer.css">
+        <script type="text/javascript" src="/assets/hexo/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="/assets/hexo/js/Meting.min.js"></script>
+        <meting-js id="114112095" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'first19326',
+        GitHubRepositories : 'Hexo-LiveForCodex',
+
+        BlogUser      : 'Kenevy',
+        BlogAvatar    : 'https://avatars.githubusercontent.com/u/38529839?v=4',
+        BlogStartDate : '2020-06-03',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Live For Code',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : '/assets/hexo/image/website/logo.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                '/assets/hexo/image/header/home.jpg',
+            
+                '/assets/hexo/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                '/assets/hexo/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '归档',
+                    href   : '/archive',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/kenevy'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : false,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '/assets/hexo/image/donate/alipay.png',
+            wechat  : '/assets/hexo/image/donate/wechat.png'
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : 'SK710PA2AC',
+            apiKey        : '765693a7f9bfa264d63155fdc6bcf68c',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'YSr7AcO1kAh7V5oideEUz4Sy-gzGzoHsz',
+            appKey         : 'hWlOkQDUaq0gQCfzaNU7Ta9T',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : '/assets/hexo/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '114112095', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : '/assets/hexo/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : '/assets/hexo/css/APlayer.css',
+            archive          : '/assets/hexo/css/archive.css',
+            donate           : '/assets/hexo/css/donate.css',
+            fancybox         : '/assets/hexo/css/jquery.fancybox.css',
+            footer           : '/assets/hexo/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : '/assets/hexo/css/index.css',
+            menuBubble       : '/assets/hexo/css/menu-bubble.css',
+            page             : '/assets/hexo/css/page.css',
+            post             : '/assets/hexo/css/post.css',
+            search           : '/assets/hexo/css/search.css',
+            tocbot           : '/assets/hexo/css/tocbot.css',
+            normal           : '/assets/hexo/css/normal.css',
+            night            : '/assets/hexo/css/night.css',
+            clipboard        : '/assets/hexo/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : '/assets/hexo/js/APlayer.min.js',
+            config           : '/assets/hexo/js/require.config.js',
+            index            : '/assets/hexo/js/index.js',
+            instantSearch    : '/assets/hexo/js/instantsearch.min.js',
+            jQuery           : '/assets/hexo/js/jquery-3.4.1.min.js',
+            loading          : '/assets/hexo/js/loading.js',
+            meting           : '/assets/hexo/js/Meting.min.js',
+            iscroll          : '/assets/hexo/js/iscroll.js',
+            require          : '/assets/hexo/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : '/assets/hexo/font/LongCang.css',
+            Monda      : '/assets/hexo/font/Monda.css',
+            NotoSansSC : '/assets/hexo/font/NotoSansSC.css',
+            Playball   : '/assets/hexo/font/Playball.css',
+            PTMono     : '/assets/hexo/font/PTMono.css',
+            RobotoSlab : '/assets/hexo/font/RobotoSlab.css',
+            Rosario    : '/assets/hexo/font/Rosario.css',
+            UbuntuMono : '/assets/hexo/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '简单地活着, 肆意又精彩.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Live For Code'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="/assets/hexo/js/index.js"></script>
+</body>
+</html>

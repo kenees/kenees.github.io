@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>微信小程序中动态更改svg颜色</title>
+
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="/assets/hexo/css/normal.css">
+    
+
+    <script type="text/javascript" src="/assets/hexo/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">微信小程序中动态更改svg颜色</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2022-10-24
+                        </span>
+                        
+                            <span id="/2022/10/24/wx-svg-edit/" class="leancloud_visitors" data-flag-title="微信小程序中动态更改svg颜色">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2022/10/24/wx-svg-edit/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <p>同样的一个图片， 在应用中选中与未选中颜色不一样， 特别是微信小程序中，为了节省空间， 打算使用svg， 可使用js动态更改其配色。<br>本篇文章采用的技术栈为 Taro构建的跨端小程序开发。</p>
+<h3 id="1-自定义一个Svg组件"><a href="#1-自定义一个Svg组件" class="headerlink" title="1. 自定义一个Svg组件"></a>1. 自定义一个Svg组件</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Component &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; Image &#125; <span class="keyword">from</span> <span class="string">&#x27;@tarojs/components&#x27;</span></span><br><span class="line"><span class="keyword">const</span> Base64 = <span class="built_in">require</span>(<span class="string">&quot;../../utils/base64&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Svg</span> <span class="keyword">extends</span> <span class="title">Component</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    state = &#123;</span><br><span class="line">        <span class="attr">svgStyle</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="title">componentWillMount</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; src, color &#125; = <span class="built_in">this</span>.props; </span><br><span class="line">        <span class="keyword">if</span> (src) &#123;</span><br><span class="line">            <span class="keyword">if</span> (src.indexOf(<span class="string">&#x27;base64&#x27;</span>) &gt; -<span class="number">1</span>) &#123; <span class="comment">// </span></span><br><span class="line">                <span class="keyword">const</span> svgBase64 = src.substring(src.indexOf(<span class="string">&quot;,&quot;</span>) + <span class="number">1</span>, src.length);</span><br><span class="line">                <span class="keyword">const</span> svg = Base64.decode(svgBase64);</span><br><span class="line">                <span class="keyword">if</span> (<span class="regexp">/&lt;svg /</span>.test(svg)) &#123;</span><br><span class="line">                    <span class="keyword">let</span> newSvg;</span><br><span class="line">                    <span class="keyword">if</span> (<span class="regexp">/fill=&quot;.*?&quot;/</span>.test(svg)) &#123;</span><br><span class="line">                        newSvg = svg.replace(<span class="regexp">/fill=&quot;.*?&quot;/</span>, <span class="string">`fill=&quot;<span class="subst">$&#123;color&#125;</span>&quot;`</span>);  <span class="comment">// SVG有默认色</span></span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        newSvg = svg.replace(<span class="regexp">/&lt;svg /</span>, <span class="string">`&lt;svg fill=&quot;<span class="subst">$&#123;color&#125;</span>&quot;`</span>); <span class="comment">// 无默认色</span></span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="built_in">this</span>.setState(&#123;</span><br><span class="line">                        <span class="attr">svgStyle</span>: <span class="string">&#x27;data:image/svg+xml;base64,&#x27;</span> + Base64.encode(newSvg)</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                wx.getFileSystemManager().readFile(&#123;</span><br><span class="line">                    <span class="attr">filePath</span>: src,</span><br><span class="line">                    <span class="attr">encoding</span>:<span class="string">&quot;base64&quot;</span>,</span><br><span class="line">                    <span class="attr">success</span>: <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">                        <span class="keyword">const</span> svg = Base64.decode(res?.data);</span><br><span class="line">                        <span class="keyword">if</span> (<span class="regexp">/&lt;svg /</span>.test(svg)) &#123;</span><br><span class="line">                            <span class="keyword">let</span> newSvg;</span><br><span class="line">                            <span class="keyword">if</span> (<span class="regexp">/fill=&quot;.*?&quot;/</span>.test(svg)) &#123;</span><br><span class="line">                                newSvg = svg.replace(<span class="regexp">/fill=&quot;.*?&quot;/</span>, <span class="string">`fill=&quot;<span class="subst">$&#123;color&#125;</span>&quot;`</span>);  <span class="comment">// SVG有默认色</span></span><br><span class="line">                            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                newSvg = svg.replace(<span class="regexp">/&lt;svg /</span>, <span class="string">`&lt;svg fill=&quot;<span class="subst">$&#123;color&#125;</span>&quot;`</span>); <span class="comment">// 无默认色</span></span><br><span class="line">                            &#125;</span><br><span class="line">                            <span class="built_in">this</span>.setState(&#123;</span><br><span class="line">                                <span class="attr">svgStyle</span>: <span class="string">&#x27;data:image/svg+xml;base64,&#x27;</span> + Base64.encode(newSvg)</span><br><span class="line">                            &#125;)</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">Image</span> <span class="attr">src</span>=<span class="string">&#123;this.state.svgStyle&#125;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;fill:</span> &#x27;<span class="attr">red</span>&#x27;&#125;&#125; /&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-其它位置使用"><a href="#2-其它位置使用" class="headerlink" title="2. 其它位置使用"></a>2. 其它位置使用</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Svg <span class="keyword">from</span> <span class="string">&#x27;@/components/Svg&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">Svg</span> <span class="attr">src</span>=<span class="string">&quot;https://xxx.svg&quot;</span> <span class="attr">color</span>=<span class="string">&quot;red&quot;</span> /&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-相关基础库"><a href="#3-相关基础库" class="headerlink" title="3. 相关基础库"></a>3. 相关基础库</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Base64 = &#123;</span><br><span class="line">    <span class="comment">// private property</span></span><br><span class="line">    <span class="attr">_keyStr</span>: <span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&quot;</span>,</span><br><span class="line">    <span class="comment">// public method for encoding</span></span><br><span class="line">    <span class="attr">encode</span>: <span class="function"><span class="keyword">function</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> output = <span class="string">&quot;&quot;</span>;</span><br><span class="line">      <span class="keyword">var</span> chr1, chr2, chr3, enc1, enc2, enc3, enc4;</span><br><span class="line">      <span class="keyword">var</span> i = <span class="number">0</span>;</span><br><span class="line">      input = Base64._utf8_encode(input);</span><br><span class="line">  </span><br><span class="line">      <span class="keyword">while</span> (i &lt; input.length) &#123;</span><br><span class="line">  </span><br><span class="line">        chr1 = input.charCodeAt(i++);</span><br><span class="line">        chr2 = input.charCodeAt(i++);</span><br><span class="line">        chr3 = input.charCodeAt(i++);</span><br><span class="line">  </span><br><span class="line">        enc1 = chr1 &gt;&gt; <span class="number">2</span>;</span><br><span class="line">        enc2 = ((chr1 &amp; <span class="number">3</span>) &lt;&lt; <span class="number">4</span>) | (chr2 &gt;&gt; <span class="number">4</span>);</span><br><span class="line">        enc3 = ((chr2 &amp; <span class="number">15</span>) &lt;&lt; <span class="number">2</span>) | (chr3 &gt;&gt; <span class="number">6</span>);</span><br><span class="line">        enc4 = chr3 &amp; <span class="number">63</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">isNaN</span>(chr2)) &#123;</span><br><span class="line">          enc3 = enc4 = <span class="number">64</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">isNaN</span>(chr3)) &#123;</span><br><span class="line">          enc4 = <span class="number">64</span>;</span><br><span class="line">        &#125;</span><br><span class="line">  </span><br><span class="line">        output = output + <span class="built_in">this</span>._keyStr.charAt(enc1) + <span class="built_in">this</span>._keyStr.charAt(enc2) + <span class="built_in">this</span>._keyStr.charAt(enc3) + <span class="built_in">this</span>._keyStr.charAt(enc4);</span><br><span class="line">  </span><br><span class="line">      &#125;</span><br><span class="line">  </span><br><span class="line">      <span class="keyword">return</span> output;</span><br><span class="line">    &#125;,</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// public method for decoding</span></span><br><span class="line">    <span class="attr">decode</span>: <span class="function"><span class="keyword">function</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> output = <span class="string">&quot;&quot;</span>;</span><br><span class="line">      <span class="keyword">var</span> chr1, chr2, chr3;</span><br><span class="line">      <span class="keyword">var</span> enc1, enc2, enc3, enc4;</span><br><span class="line">      <span class="keyword">var</span> i = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">      input = input.replace(<span class="regexp">/[^A-Za-z0-9\+\/\=]/g</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">  </span><br><span class="line">      <span class="keyword">while</span> (i &lt; input.length) &#123;</span><br><span class="line">  </span><br><span class="line">        enc1 = <span class="built_in">this</span>._keyStr.indexOf(input.charAt(i++));</span><br><span class="line">        enc2 = <span class="built_in">this</span>._keyStr.indexOf(input.charAt(i++));</span><br><span class="line">        enc3 = <span class="built_in">this</span>._keyStr.indexOf(input.charAt(i++));</span><br><span class="line">        enc4 = <span class="built_in">this</span>._keyStr.indexOf(input.charAt(i++));</span><br><span class="line">  </span><br><span class="line">        chr1 = (enc1 &lt;&lt; <span class="number">2</span>) | (enc2 &gt;&gt; <span class="number">4</span>);</span><br><span class="line">        chr2 = ((enc2 &amp; <span class="number">15</span>) &lt;&lt; <span class="number">4</span>) | (enc3 &gt;&gt; <span class="number">2</span>);</span><br><span class="line">        chr3 = ((enc3 &amp; <span class="number">3</span>) &lt;&lt; <span class="number">6</span>) | enc4;</span><br><span class="line">  </span><br><span class="line">        output = output + <span class="built_in">String</span>.fromCharCode(chr1);</span><br><span class="line">  </span><br><span class="line">        <span class="keyword">if</span> (enc3 != <span class="number">64</span>) &#123;</span><br><span class="line">          output = output + <span class="built_in">String</span>.fromCharCode(chr2);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (enc4 != <span class="number">64</span>) &#123;</span><br><span class="line">          output = output + <span class="built_in">String</span>.fromCharCode(chr3);</span><br><span class="line">        &#125;</span><br><span class="line">  </span><br><span class="line">      &#125;</span><br><span class="line">  </span><br><span class="line">      output = Base64._utf8_decode(output);</span><br><span class="line">  </span><br><span class="line">      <span class="keyword">return</span> output;</span><br><span class="line">    &#125;,</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// private method for UTF-8 encoding</span></span><br><span class="line">    <span class="attr">_utf8_encode</span>: <span class="function"><span class="keyword">function</span>(<span class="params">string</span>) </span>&#123;</span><br><span class="line">      string = string.replace(<span class="regexp">/\r\n/g</span>, <span class="string">&quot;\n&quot;</span>);</span><br><span class="line">      <span class="keyword">var</span> utftext = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  </span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> n = <span class="number">0</span>; n &lt; string.length; n++) &#123;</span><br><span class="line">  </span><br><span class="line">        <span class="keyword">var</span> c = string.charCodeAt(n);</span><br><span class="line">  </span><br><span class="line">        <span class="keyword">if</span> (c &lt; <span class="number">128</span>) &#123;</span><br><span class="line">          utftext += <span class="built_in">String</span>.fromCharCode(c);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((c &gt; <span class="number">127</span>) &amp;&amp; (c &lt; <span class="number">2048</span>)) &#123;</span><br><span class="line">          utftext += <span class="built_in">String</span>.fromCharCode((c &gt;&gt; <span class="number">6</span>) | <span class="number">192</span>);</span><br><span class="line">          utftext += <span class="built_in">String</span>.fromCharCode((c &amp; <span class="number">63</span>) | <span class="number">128</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          utftext += <span class="built_in">String</span>.fromCharCode((c &gt;&gt; <span class="number">12</span>) | <span class="number">224</span>);</span><br><span class="line">          utftext += <span class="built_in">String</span>.fromCharCode(((c &gt;&gt; <span class="number">6</span>) &amp; <span class="number">63</span>) | <span class="number">128</span>);</span><br><span class="line">          utftext += <span class="built_in">String</span>.fromCharCode((c &amp; <span class="number">63</span>) | <span class="number">128</span>);</span><br><span class="line">        &#125;</span><br><span class="line">  </span><br><span class="line">      &#125;</span><br><span class="line">  </span><br><span class="line">      <span class="keyword">return</span> utftext;</span><br><span class="line">    &#125;,</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// private method for UTF-8 decoding</span></span><br><span class="line">    <span class="attr">_utf8_decode</span>: <span class="function"><span class="keyword">function</span>(<span class="params">utftext</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> string = <span class="string">&quot;&quot;</span>;</span><br><span class="line">      <span class="keyword">var</span> i = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">var</span> c = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">var</span> c1 = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">var</span> c2 = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">      <span class="keyword">while</span> (i &lt; utftext.length) &#123;</span><br><span class="line">  </span><br><span class="line">        c = utftext.charCodeAt(i);</span><br><span class="line">  </span><br><span class="line">        <span class="keyword">if</span> (c &lt; <span class="number">128</span>) &#123;</span><br><span class="line">          string += <span class="built_in">String</span>.fromCharCode(c);</span><br><span class="line">          i++;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((c &gt; <span class="number">191</span>) &amp;&amp; (c &lt; <span class="number">224</span>)) &#123;</span><br><span class="line">          c2 = utftext.charCodeAt(i + <span class="number">1</span>);</span><br><span class="line">          string += <span class="built_in">String</span>.fromCharCode(((c &amp; <span class="number">31</span>) &lt;&lt; <span class="number">6</span>) | (c2 &amp; <span class="number">63</span>));</span><br><span class="line">          i += <span class="number">2</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          c2 = utftext.charCodeAt(i + <span class="number">1</span>);</span><br><span class="line">          c3 = utftext.charCodeAt(i + <span class="number">2</span>);</span><br><span class="line">          string += <span class="built_in">String</span>.fromCharCode(((c &amp; <span class="number">15</span>) &lt;&lt; <span class="number">12</span>) | ((c2 &amp; <span class="number">63</span>) &lt;&lt; <span class="number">6</span>) | (c3 &amp; <span class="number">63</span>));</span><br><span class="line">          i += <span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">  </span><br><span class="line">      &#125;</span><br><span class="line">  </span><br><span class="line">      <span class="keyword">return</span> string;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">module</span>.exports = Base64</span><br></pre></td></tr></table></figure>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://avatars.githubusercontent.com/u/38529839?v=4" alt="Kenevy">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Kenevy
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2022/10/24/wx-svg-edit/" target="_blank">微信小程序中动态更改svg颜色</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：简单地活着, 肆意又精彩.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Live For Code</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categorie/%E5%89%8D%E7%AB%AF/">前端</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tag/Taro/">Taro</a>
+                
+                    <a href="/tag/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/">微信小程序</a>
+                
+                    <a href="/tag/svg/">svg</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2022/11/22/github-module/" class="prev-prefix">« </a> 上一篇：    <a href="/2022/11/22/github-module/" title="发布于 2022-11-22 03:02">GitHub上传私有npm包及使用</a>
+                <br>
+            
+            
+                <a href="/2022/10/24/cpmpress/" class="next-prefix">» </a> 下一篇：    <a href="/2022/10/24/cpmpress/" title="发布于 2022-10-24 02:40">linux中的常用压缩命令</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/css/search.css">
+<script type="text/javascript" src="/assets/hexo/js/iscroll.js"></script>
+<script type="text/javascript" src="/assets/hexo/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="/assets/hexo/css/APlayer.css">
+        <script type="text/javascript" src="/assets/hexo/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="/assets/hexo/js/Meting.min.js"></script>
+        <meting-js id="114112095" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'first19326',
+        GitHubRepositories : 'Hexo-LiveForCodex',
+
+        BlogUser      : 'Kenevy',
+        BlogAvatar    : 'https://avatars.githubusercontent.com/u/38529839?v=4',
+        BlogStartDate : '2020-06-03',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Live For Code',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : '/assets/hexo/image/website/logo.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                '/assets/hexo/image/header/home.jpg',
+            
+                '/assets/hexo/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                '/assets/hexo/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '归档',
+                    href   : '/archive',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/kenevy'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : false,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '/assets/hexo/image/donate/alipay.png',
+            wechat  : '/assets/hexo/image/donate/wechat.png'
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : 'SK710PA2AC',
+            apiKey        : '765693a7f9bfa264d63155fdc6bcf68c',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'YSr7AcO1kAh7V5oideEUz4Sy-gzGzoHsz',
+            appKey         : 'hWlOkQDUaq0gQCfzaNU7Ta9T',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : '/assets/hexo/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '114112095', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : '/assets/hexo/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : '/assets/hexo/css/APlayer.css',
+            archive          : '/assets/hexo/css/archive.css',
+            donate           : '/assets/hexo/css/donate.css',
+            fancybox         : '/assets/hexo/css/jquery.fancybox.css',
+            footer           : '/assets/hexo/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : '/assets/hexo/css/index.css',
+            menuBubble       : '/assets/hexo/css/menu-bubble.css',
+            page             : '/assets/hexo/css/page.css',
+            post             : '/assets/hexo/css/post.css',
+            search           : '/assets/hexo/css/search.css',
+            tocbot           : '/assets/hexo/css/tocbot.css',
+            normal           : '/assets/hexo/css/normal.css',
+            night            : '/assets/hexo/css/night.css',
+            clipboard        : '/assets/hexo/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : '/assets/hexo/js/APlayer.min.js',
+            config           : '/assets/hexo/js/require.config.js',
+            index            : '/assets/hexo/js/index.js',
+            instantSearch    : '/assets/hexo/js/instantsearch.min.js',
+            jQuery           : '/assets/hexo/js/jquery-3.4.1.min.js',
+            loading          : '/assets/hexo/js/loading.js',
+            meting           : '/assets/hexo/js/Meting.min.js',
+            iscroll          : '/assets/hexo/js/iscroll.js',
+            require          : '/assets/hexo/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : '/assets/hexo/font/LongCang.css',
+            Monda      : '/assets/hexo/font/Monda.css',
+            NotoSansSC : '/assets/hexo/font/NotoSansSC.css',
+            Playball   : '/assets/hexo/font/Playball.css',
+            PTMono     : '/assets/hexo/font/PTMono.css',
+            RobotoSlab : '/assets/hexo/font/RobotoSlab.css',
+            Rosario    : '/assets/hexo/font/Rosario.css',
+            UbuntuMono : '/assets/hexo/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '简单地活着, 肆意又精彩.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Live For Code'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="/assets/hexo/js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>Git安装及使用</title>
+
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="/assets/hexo/css/normal.css">
+    
+
+    <script type="text/javascript" src="/assets/hexo/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">Git安装及使用</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-06-03
+                        </span>
+                        
+                            <span id="/2021/06/03/git-install-used/" class="leancloud_visitors" data-flag-title="Git安装及使用">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/06/03/git-install-used/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <p>Git安装教程及日常开发常用命令</p>
+<h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h2><h3 id="1-1-Windows"><a href="#1-1-Windows" class="headerlink" title="1.1 Windows"></a>1.1 Windows</h3><p>打开链接<a target="_blank" rel="noopener" href="https://git-scm.com/download/win">https://git-scm.com/download/win</a> 可自动下载，直接下一步到完成。</p>
+<p>打开cmd，  输入git –version可查看版本号，安装成功如下</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN8AAAAxCAYAAABat3zeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAS6SURBVHhe7ZxBbh03EETnALqKIB0isQ8RJzlEFo7hxMnSXmeTvQRI0Fl0Jwc00B+lQneTw09+jpVaPJBd1d3sGYvQl2x4e3p6+np1dSWEuDC6fEIsQpdPiEXo8gmxiO3L5y+uIYSYy/b4+OgaQoi5bG9//dM1hBBz2d7+8odrCCHmsr35+aNrCCHmsr1598E1hBBz2X5897trCCHmsv3w03vXEELMZfv78z+uIYSYy3Z3d+caQoi5bPf3964hhJjL9vDw4BpCiLlsf3365BqtPD8/u/rRONqcZR5vJtMR9DB3L+fWf88c8dm329vbU2B/2AYmZni53IfjFaw8G8E5eKbajOc8w1GefwVHfPbT5dv7RYBEuef0nMHq8wveDKi1zDjjOY7wbv5vfLt8tS8I1FpzPT3KuxSrzy/U3l/ZI5iHZF4Po/uJOuHl88i+IDydNS9GIi/S2Occ9sxnzfSoztMxxtXLYc32nsa+l294uYinYz57Uc4o+AyOWzX2OQc9T0M8H2P2RrLd3NwMae71YA3jXs9i1kzP4lYN4xaPV95jzHqkGa1etEd6z2FKbg9Wy728fRSzZnoWt2oYlz3Hth/Fdn19PaSx14M1L47qGPYxRrx8xPP25GNse16RohlZDmtG5LGOcWsNknmjsbP4zBIz7GOMePmI52X9M28U22//Pg1rXBs4Oqc1z6j5hSxnz3lZru15ZR/3nMNa1iPTTI+8Qq83GjuLz6zN0DJjlOPp2fmZN4pvHzvLpuWwomVD1Hpg3Ot5caT35mHcmtual+174pqOZDkt9SPxzmOtFkd6S29Pw7il57mcLl+hHGBgEvueV/A8q2EPdfbY9zT2PB89xPOyupqHK3sMe5jPHvtRvpHVMehzDnsziM7x5kCNPc/PvMyPNI5H8eLyjWD0gLP4XuZshZ/ntT3fa2T45RPrKBfO8HxxLF788zIhxOXQ5RNiEbsu32v4OHPJZ+j9GFir29vP6K3LOKdn9oyXZNUMunyT4HNaz83qyt7AnBq9dS2c23PGTK3MfC8tDPvYufIlHhF+H63vp6Wu91331s3kCDOtmmHYbzuP+Ad7JEZemJG9VnOEmVbNEP4lOw7kaZ4X5TCcy3Grxj7noOdpiOdjzN4eeuqy8y4xB56PK+8tNrwc9FH3fE/HGFcvh/UW9uaP4nT5cIBomGzIcx84O9+LWTM9i1s1jMueY9u30lNjeLW9/fbWWT6vSKShHu17PF5578U19uaP4vQzX/YwNb3Q8wBWw7UlZtjHGPHyEc/L+mdeC3vzGa++t2fv7LwiLRrG53q8GiVmrZXeunN58QuX2gP0ehFWw7W1Xi1nRTmenp2feTX25Bot5/X0Leyts3xekRYN43M9XplIz+ipGYH7sTMiy+l9AK+OtVoc6S29PQ3jlp4etZ5Rn6yupkU9jZ4686KcqGcU93oYt+bZnn2m5s/C/c7Hw6Du+ZzDXkaU7/VDjT3Pz7zMjzSOMzCXazhmvBrW2ecYwXzO45gxj3OsDmHdi7PaKB89XFFHPA819hAvbxbuz3xeLIQYS9N3PiHEeF5cPiHE5dDlE2IRunxCLEKXT4hF6PIJsQhdPiEWof9ASYglXH39D9DLnpck0mLpAAAAAElFTkSuQmCC"></p>
+<h3 id="1-2-Linux"><a href="#1-2-Linux" class="headerlink" title="1.2 Linux"></a>1.2 Linux</h3><p>  在Linux上是用yum安装Git，非常简单，只需要一行命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yum -y install git</span><br></pre></td></tr></table></figure>
+
+<p>输入 git –version 查看Git是否安装完成及查看其版本号。</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaIAAAAkCAYAAADLlT4eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASRSURBVHhe7ZlRbuNADENz3d6q371kFvkQwHApaTyOx0lMAw+wSGrkzRYWmt5+f3/vPz8/99vtZowxxqyHF9Hf398TT+FFZHP52VSu8laQzc/0I1gxYxb8HM56zm72Wc/1Lpz5f2MuSraInkILyeYrfUt2JWc+14oZr0A9J2rKfxXV2UfO/RT8GZjleBG9njOfa8WMV6CeEzXlr+CsucZcmtFFhHrccw71rb7yHrAfdaaN6MgeHz0k81FXmdCQUV95D7C/gvOqPzRE5ZXPsI89DPZVcI/q54zSEcwcSTYP9bhHulz4rCufM5XHGayVb0zJlt+I+Acsu+f8iF9prMc9all2VOt8ZsYLPbzsnvMjfqWNwH1dXWVCYx9RHmrKr+B81T/rHUk2N3Tls8a57J7zqGX6iNbVxqTMLCJVs7fVrzTW4x61LDuqKZ+JDFLlOh1r9pSmMsxIRsF96hylIexXeeWhpvwKzlf9s15H9DIjPt4jmMvg7GidoXIjWlcbk7JnEXUeap1faazHPWpZdlRTPsJ+lc881rFmr9NYZ195FdyXnRN65bGuUFnUlF/B+ap/1juSbG7omY9syVQ55Y9oXW1MyqcvIs6hv0VTPsJ+lc881rFmL9M6r+qp4L7uHOV3PQhno1ZgXwZnq95Z72h4NtbsKUYyQZVV3ojW1cakvPMiyu47VLbTtvpcI5nHOtbsbfWVpvwMznb1aCZDZVFTfgXnq/5Rr8odRczk2VwrTWUqL8uPZlnramNSskXEP0SZjnCGc52vcpmufJWpvD0+1lkGvUpTGfZGfJVTfgb38Rnod17oTJVDTfkd0YN0GfY5o/yjyWbjc3Em0xHOqFzls5f5WW1MCi8iY74BvwSN+SC8iMw3wIvHi8iYD8KLyHwLsXy8hIz5MLyIjDHGnIoXkTHGmFPxIjLGGHMqM4uo+w7+07+fP/tvDLPzow9RuYy9/cGeXmPMBXn1IvqGl9CZ/4aYvXW+6tlyzt7+IHq29hljLsyrv5rzS2gefIlv/QxVz8w5yNb+yG/tM8ZcHFxE/BJRLxTOKB3BTEWWRz3ukS4XPuvK50zlcQZr5W9hplf1zJyDzPbvnWuMuRixiPjlUb1MZr2KrC905bPGueye86hl+ojW1aPs7UNUrmJv/4M9vcaYC/Jpi0jB2dE6Q+VGtK4eZaZP9cycg8z2751rjLkYn/wbEbMlU+WUP6J19Sgzfapn5hxktn/vXGPMxXiXRfSAe7FmTzGSCaqs8ka0rh5lpk/1zJyDzPbvnWuMuRhHLqIqlxE93Mu10lSm8rL8aJa1rh6l61P+qJbpo1qlB51vjDFPxCJ6FPECQbih8zmj/I6sF8/lTKYjnFG5ymcv87O6I/JMlst0hDOYy3SEM5jLdIZzxhjzBC4ixC8RY4wxS5j5as4YY4x5GdVXc/+FjTHGmFeTfTVnjDHGLMGLyBhjzKl4ERljjDkVXkTv8HeibC4/m8pV3gqy+Zl+BCtmzIKfwzs/pzFmIdkiegotJJuv9C3ZlZz5XCtmvAL1nKgp3xjzpdx9+fLly5ev0677/R872hUaXgDExwAAAABJRU5ErkJggg=="></p>
+<h2 id="2-常用命令"><a href="#2-常用命令" class="headerlink" title="2. 常用命令"></a>2. 常用命令</h2><h3 id=""><a href="#" class="headerlink" title=""></a></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git init                                         // 初始化本地仓库</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add origin <span class="string">&quot;remote repository&quot;</span>        // 链接远程仓库</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add (.)                                      // 将内容从工作目录添加到暂存区(<span class="string">&quot;.&quot;</span>可以添加所有更改)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -am <span class="string">&quot;commit message&quot;</span>                  // 将暂存区里的改动提交到本地仓库</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push -u origin master                        // 提交本地仓库代码到远程仓库(-u 初次提交添加)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin mastr --force                    // 覆盖提交到远程master分支</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout (-f/-b) feature                     // 切到feature分支 (-f 强制切换,-b从当前分支新建并切到feature)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b feature origin feature           // 切换到远程feature分支</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -a                                    // 查看分支(-a 查看远程分支)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote update origin --prune                 // 更新git branch -a 查看的远程分支列表</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -d branchname                         // 删除本地分支</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin --delete branchname              // 删除远程分支</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag tagName                                  // 新增tag</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag -a tagName commitID -m <span class="string">&quot;commit message&quot;</span>  // 绑定commit到tag</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag                                          // 查看本地tag</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin tagname                          // 同步本地tag到远程</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin --tags                           // 推送所有tag到远程</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout tagname                             // 切换tag</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag -d tagname                               // 删除tag</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin :refs/tags/&lt;tagname&gt;             // 删除远程tag</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ git stash save <span class="string">&quot;save massage&quot;</span>                    // 执行存储,添加备注,只有git stash也可以</span><br><span class="line">$ git stash list                                   // 查看stash了哪些存储</span><br><span class="line">$ git stash show                                   // 显示做了哪些改动， 默认显示第一个, 如果需要显示其他存储，后面加stash@&#123;<span class="variable">$num</span>&#125;, egg: git stash show stash@&#123;1&#125;</span><br><span class="line">$ git stash show -p                                // 查看存储改动内容， 默认显示第一个，如果需要显示其他存储，中间加stash@&#123;<span class="variable">$num</span>&#125;, egg: git stash show stash@&#123;1&#125; -p</span><br><span class="line">$ git stash apply                                  // 应用某个存储， 但是不会从列表中删除，默认第一个， 如果需要显示其他存储，后面加stash@&#123;<span class="variable">$num</span>&#125;, egg: git stash apply stash@&#123;1&#125;</span><br><span class="line">$ git stash pop                                    // 回复支持缓存的工资目录， 并删除， 将修改应用到当前目录下，默认第一个，其他同上</span><br><span class="line">$ git stash drop                                   // 丢弃存储， 默认第一个，其他同上</span><br><span class="line">$ git stash clear                                  // 删除所有缓存的stash</span><br><span class="line"></span><br><span class="line">* 注意：新增的文件无法stash，需要git add添加进版本库后才能保存到stash</span><br></pre></td></tr></table></figure>
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://avatars.githubusercontent.com/u/38529839?v=4" alt="Kenevy">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Kenevy
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/06/03/git-install-used/" target="_blank">Git安装及使用</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：简单地活着, 肆意又精彩.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Live For Code</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categorie/%E5%B7%A5%E5%85%B7/">工具</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tag/Git/">Git</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/06/09/git-lfs/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/06/09/git-lfs/" title="发布于 2021-06-09 10:40">Git大文件上传</a>
+                <br>
+            
+            
+                <a href="/2021/06/01/hello-world/" class="next-prefix">» </a> 下一篇：    <a href="/2021/06/01/hello-world/" title="发布于 2021-06-01 04:39">Hello World</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/css/search.css">
+<script type="text/javascript" src="/assets/hexo/js/iscroll.js"></script>
+<script type="text/javascript" src="/assets/hexo/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="/assets/hexo/css/APlayer.css">
+        <script type="text/javascript" src="/assets/hexo/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="/assets/hexo/js/Meting.min.js"></script>
+        <meting-js id="114112095" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'first19326',
+        GitHubRepositories : 'Hexo-LiveForCodex',
+
+        BlogUser      : 'Kenevy',
+        BlogAvatar    : 'https://avatars.githubusercontent.com/u/38529839?v=4',
+        BlogStartDate : '2020-06-03',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Live For Code',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : '/assets/hexo/image/website/logo.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                '/assets/hexo/image/header/home.jpg',
+            
+                '/assets/hexo/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                '/assets/hexo/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '归档',
+                    href   : '/archive',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/kenevy'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : false,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '/assets/hexo/image/donate/alipay.png',
+            wechat  : '/assets/hexo/image/donate/wechat.png'
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : 'SK710PA2AC',
+            apiKey        : '765693a7f9bfa264d63155fdc6bcf68c',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'YSr7AcO1kAh7V5oideEUz4Sy-gzGzoHsz',
+            appKey         : 'hWlOkQDUaq0gQCfzaNU7Ta9T',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : '/assets/hexo/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '114112095', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : '/assets/hexo/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : '/assets/hexo/css/APlayer.css',
+            archive          : '/assets/hexo/css/archive.css',
+            donate           : '/assets/hexo/css/donate.css',
+            fancybox         : '/assets/hexo/css/jquery.fancybox.css',
+            footer           : '/assets/hexo/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : '/assets/hexo/css/index.css',
+            menuBubble       : '/assets/hexo/css/menu-bubble.css',
+            page             : '/assets/hexo/css/page.css',
+            post             : '/assets/hexo/css/post.css',
+            search           : '/assets/hexo/css/search.css',
+            tocbot           : '/assets/hexo/css/tocbot.css',
+            normal           : '/assets/hexo/css/normal.css',
+            night            : '/assets/hexo/css/night.css',
+            clipboard        : '/assets/hexo/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : '/assets/hexo/js/APlayer.min.js',
+            config           : '/assets/hexo/js/require.config.js',
+            index            : '/assets/hexo/js/index.js',
+            instantSearch    : '/assets/hexo/js/instantsearch.min.js',
+            jQuery           : '/assets/hexo/js/jquery-3.4.1.min.js',
+            loading          : '/assets/hexo/js/loading.js',
+            meting           : '/assets/hexo/js/Meting.min.js',
+            iscroll          : '/assets/hexo/js/iscroll.js',
+            require          : '/assets/hexo/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : '/assets/hexo/font/LongCang.css',
+            Monda      : '/assets/hexo/font/Monda.css',
+            NotoSansSC : '/assets/hexo/font/NotoSansSC.css',
+            Playball   : '/assets/hexo/font/Playball.css',
+            PTMono     : '/assets/hexo/font/PTMono.css',
+            RobotoSlab : '/assets/hexo/font/RobotoSlab.css',
+            Rosario    : '/assets/hexo/font/Rosario.css',
+            UbuntuMono : '/assets/hexo/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '简单地活着, 肆意又精彩.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Live For Code'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="/assets/hexo/js/index.js"></script>
+</body>
+</html>

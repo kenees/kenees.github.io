@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>内网搭建私有npm仓库</title>
+
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="/assets/hexo/css/normal.css">
+    
+
+    <script type="text/javascript" src="/assets/hexo/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">内网搭建私有npm仓库</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2022-12-12
+                        </span>
+                        
+                            <span id="/2022/12/12/prived-npm-server/" class="leancloud_visitors" data-flag-title="内网搭建私有npm仓库">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2022/12/12/prived-npm-server/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1. 介绍"></a>1. 介绍</h2><p>基于verdaccio在公司内网搭建npm包托管平台， 可上传npm私有包， 可下载npm官网包并实现缓存。</p>
+<p>最终网站看起来是这个样子</p>
+<p><img src="/assets/verdaccio/20221212-155439.png" alt="&#39;&#39;"></p>
+<h3 id="1-1-基于docker安装verdaccio服务"><a href="#1-1-基于docker安装verdaccio服务" class="headerlink" title="1.1 基于docker安装verdaccio服务"></a>1.1 基于docker安装verdaccio服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull verdaccio/verdaccio</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-直接启动服务测试"><a href="#1-2-直接启动服务测试" class="headerlink" title="1.2 直接启动服务测试"></a>1.2 直接启动服务测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -it --rm --name verdaccio -p 4873:4873 -v /home/user/verdaccio/storage:/verdaccio/storage -v /home/user/verdaccio/conf:/verdaccio/conf -v /home/user/verdaccio/plugins:/verdaccio/plugins verdaccio/verdaccio</span><br></pre></td></tr></table></figure>
+<p>该命令将docker中的storage,conf，plugin映射到/home/user/verdaccio目录下, 方便管理</p>
+<h3 id="1-3-配置conf"><a href="#1-3-配置conf" class="headerlink" title="1.3 配置conf"></a>1.3 配置conf</h3><ol>
+<li><p>将docker容器中的conf拷贝出来</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a <span class="comment">#查看docker容器id</span></span><br><span class="line">sudo docker cp 5a2v1q1pw3e5d:/verdaccio/conf /home/user/verdaccio/conf</span><br></pre></td></tr></table></figure></li>
+<li><p>打开conf中的config.yaml更改配置为如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># This is the default configuration file. It allows all users to do anything,</span></span><br><span class="line"><span class="comment"># please read carefully the documentation and best practices to</span></span><br><span class="line"><span class="comment"># improve security.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Do not configure host and port under `listen` in this file</span></span><br><span class="line"><span class="comment"># as it will be ignored when using docker.</span></span><br><span class="line"><span class="comment"># see https://verdaccio.org/docs/en/docker#docker-and-custom-port-configuration</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Look here for more config file examples:</span></span><br><span class="line"><span class="comment"># https://github.com/verdaccio/verdaccio/tree/5.x/conf</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Read about the best practices</span></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/best</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># path to a directory with all packages</span></span><br><span class="line"><span class="attr">storage:</span> <span class="string">/verdaccio/storage</span></span><br><span class="line"><span class="comment"># path to a directory with plugins to include</span></span><br><span class="line"><span class="attr">plugins:</span> <span class="string">/verdaccio/plugins</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/webui</span></span><br><span class="line"><span class="attr">web:</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">Verdaccio</span></span><br><span class="line"><span class="comment"># comment out to disable gravatar support</span></span><br><span class="line"><span class="comment"># gravatar: false</span></span><br><span class="line"><span class="comment"># by default packages are ordercer ascendant (asc|desc)</span></span><br><span class="line"><span class="comment"># sort_packages: asc</span></span><br><span class="line"><span class="comment"># convert your UI to the dark side</span></span><br><span class="line"><span class="comment"># darkMode: true</span></span><br><span class="line"><span class="comment"># html_cache: true</span></span><br><span class="line"><span class="comment"># by default all features are displayed</span></span><br><span class="line"><span class="comment"># login: true</span></span><br><span class="line"><span class="comment"># showInfo: true</span></span><br><span class="line"><span class="comment"># showSettings: true</span></span><br><span class="line"><span class="comment"># In combination with darkMode you can force specific theme</span></span><br><span class="line"><span class="comment"># showThemeSwitch: true</span></span><br><span class="line"><span class="comment"># showFooter: true</span></span><br><span class="line"><span class="comment"># showSearch: true</span></span><br><span class="line"><span class="comment"># showRaw: true</span></span><br><span class="line"><span class="comment"># showDownloadTarball: true</span></span><br><span class="line"><span class="comment">#  HTML tags injected after manifest &lt;scripts/&gt;</span></span><br><span class="line"><span class="comment"># scriptsBodyAfter:</span></span><br><span class="line"><span class="comment">#    - &#x27;&lt;script type=&quot;text/javascript&quot; src=&quot;https://my.company.com/customJS.min.js&quot;&gt;&lt;/script&gt;&#x27;</span></span><br><span class="line"><span class="comment">#  HTML tags injected before ends &lt;/head&gt;</span></span><br><span class="line"><span class="comment">#  metaScripts:</span></span><br><span class="line"><span class="comment">#    - &#x27;&lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-3.5.1.slim.min.js&quot;&gt;&lt;/script&gt;&#x27;</span></span><br><span class="line"><span class="comment">#    - &#x27;&lt;script type=&quot;text/javascript&quot; src=&quot;https://browser.sentry-cdn.com/5.15.5/bundle.min.js&quot;&gt;&lt;/script&gt;&#x27;</span></span><br><span class="line"><span class="comment">#    - &#x27;&lt;meta name=&quot;robots&quot; content=&quot;noindex&quot; /&gt;&#x27;</span></span><br><span class="line"><span class="comment">#  HTML tags injected first child at &lt;body/&gt;</span></span><br><span class="line"><span class="comment">#  bodyBefore:</span></span><br><span class="line"><span class="comment">#    - &#x27;&lt;div id=&quot;myId&quot;&gt;html before webpack scripts&lt;/div&gt;&#x27;</span></span><br><span class="line"><span class="comment">#  Public path for template manifest scripts (only manifest)</span></span><br><span class="line"><span class="comment">#  publicPath: http://somedomain.org/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#authentication</span></span><br><span class="line"><span class="attr">auth:</span></span><br><span class="line"><span class="attr">htpasswd:</span></span><br><span class="line">    <span class="attr">file:</span> <span class="string">/verdaccio/storage/htpasswd</span></span><br><span class="line">    <span class="comment"># Maximum amount of users allowed to register, defaults to &quot;+infinity&quot;.</span></span><br><span class="line">    <span class="comment"># You can set this to -1 to disable registration.</span></span><br><span class="line">    <span class="comment"># max_users: 1000</span></span><br><span class="line">    <span class="comment"># Hash algorithm, possible options are: &quot;bcrypt&quot;, &quot;md5&quot;, &quot;sha1&quot;, &quot;crypt&quot;.</span></span><br><span class="line">    <span class="comment"># algorithm: bcrypt # by default is crypt, but is recommended use bcrypt for new installations</span></span><br><span class="line">    <span class="comment"># Rounds number for &quot;bcrypt&quot;, will be ignored for other algorithms.</span></span><br><span class="line">    <span class="comment"># rounds: 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#uplinks</span></span><br><span class="line"><span class="comment"># a list of other known repositories we can talk to</span></span><br><span class="line"><span class="attr">uplinks:</span></span><br><span class="line"><span class="attr">npmjs:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">https://registry.npmjs.org/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Learn how to protect your packages</span></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/protect-your-dependencies/</span></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#packages</span></span><br><span class="line"><span class="attr">packages:</span></span><br><span class="line"><span class="string">&#x27;@*/*&#x27;</span><span class="string">:</span></span><br><span class="line">    <span class="comment"># scoped packages</span></span><br><span class="line">    <span class="attr">access:</span> <span class="string">$all</span></span><br><span class="line">    <span class="attr">publish:</span> <span class="string">$authenticated</span></span><br><span class="line">    <span class="attr">unpublish:</span> <span class="string">$authenticated</span></span><br><span class="line">    <span class="attr">proxy:</span> <span class="string">npmjs</span></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;**&#x27;</span><span class="string">:</span></span><br><span class="line">    <span class="comment"># allow all users (including non-authenticated users) to read and</span></span><br><span class="line">    <span class="comment"># publish all packages</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># you can specify usernames/groupnames (depending on your auth plugin)</span></span><br><span class="line">    <span class="comment"># and three keywords: &quot;$all&quot;, &quot;$anonymous&quot;, &quot;$authenticated&quot;</span></span><br><span class="line">    <span class="attr">access:</span> <span class="string">$all</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># allow all known users to publish/publish packages</span></span><br><span class="line">    <span class="comment"># (anyone can register by default, remember?)</span></span><br><span class="line">    <span class="attr">publish:</span> <span class="string">$authenticated</span></span><br><span class="line">    <span class="attr">unpublish:</span> <span class="string">$authenticated</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># if package is not available locally, proxy requests to &#x27;npmjs&#x27; registry</span></span><br><span class="line">    <span class="attr">proxy:</span> <span class="string">npmjs</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># To improve your security configuration and  avoid dependency confusion</span></span><br><span class="line"><span class="comment"># consider removing the proxy property for private packages</span></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/best#remove-proxy-to-increase-security-at-private-packages</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#server</span></span><br><span class="line"><span class="comment"># You can specify HTTP/1.1 server keep alive timeout in seconds for incoming connections.</span></span><br><span class="line"><span class="comment"># A value of 0 makes the http server behave similarly to Node.js versions prior to 8.0.0, which did not have a keep-alive timeout.</span></span><br><span class="line"><span class="comment"># WORKAROUND: Through given configuration you can workaround following issue https://github.com/verdaccio/verdaccio/issues/301. Set to 0 in case 60 is not enough.</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="attr">keepAliveTimeout:</span> <span class="number">60</span></span><br><span class="line"><span class="comment"># Allow `req.ip` to resolve properly when Verdaccio is behind a proxy or load-balancer</span></span><br><span class="line"><span class="comment"># See: https://expressjs.com/en/guide/behind-proxies.html</span></span><br><span class="line"><span class="comment"># trustProxy: &#x27;127.0.0.1&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#offline-publish</span></span><br><span class="line"><span class="attr">publish:</span></span><br><span class="line"><span class="attr">allow_offline:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#url-prefix</span></span><br><span class="line"><span class="comment"># url_prefix: /verdaccio/</span></span><br><span class="line"><span class="comment"># VERDACCIO_PUBLIC_URL=&#x27;https://somedomain.org&#x27;;</span></span><br><span class="line"><span class="comment"># url_prefix: &#x27;/my_prefix&#x27;</span></span><br><span class="line"><span class="comment"># // url -&gt; https://somedomain.org/my_prefix/</span></span><br><span class="line"><span class="comment"># VERDACCIO_PUBLIC_URL=&#x27;https://somedomain.org&#x27;;</span></span><br><span class="line"><span class="comment"># url_prefix: &#x27;/&#x27;</span></span><br><span class="line"><span class="comment"># // url -&gt; https://somedomain.org/</span></span><br><span class="line"><span class="comment"># VERDACCIO_PUBLIC_URL=&#x27;https://somedomain.org/first_prefix&#x27;;</span></span><br><span class="line"><span class="comment"># url_prefix: &#x27;/second_prefix&#x27;</span></span><br><span class="line"><span class="comment"># // url -&gt; https://somedomain.org/second_prefix/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#security</span></span><br><span class="line"><span class="comment"># security:</span></span><br><span class="line"><span class="comment">#   api:</span></span><br><span class="line"><span class="comment">#     legacy: true</span></span><br><span class="line"><span class="comment">#     jwt:</span></span><br><span class="line"><span class="comment">#       sign:</span></span><br><span class="line"><span class="comment">#         expiresIn: 29d</span></span><br><span class="line"><span class="comment">#       verify:</span></span><br><span class="line"><span class="comment">#         someProp: [value]</span></span><br><span class="line"><span class="comment">#    web:</span></span><br><span class="line"><span class="comment">#      sign:</span></span><br><span class="line"><span class="comment">#        expiresIn: 1h # 1 hour by default</span></span><br><span class="line"><span class="comment">#      verify:</span></span><br><span class="line"><span class="comment">#         someProp: [value]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#user-rate-limit</span></span><br><span class="line"><span class="comment"># userRateLimit:</span></span><br><span class="line"><span class="comment">#   windowMs: 50000</span></span><br><span class="line"><span class="comment">#   max: 1000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#max-body-size</span></span><br><span class="line"><span class="comment"># max_body_size: 10mb</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#listen-port</span></span><br><span class="line"><span class="comment"># listen:</span></span><br><span class="line"><span class="comment"># - localhost:4873            # default value</span></span><br><span class="line"><span class="comment"># - http://localhost:4873     # same thing</span></span><br><span class="line"><span class="comment"># - 0.0.0.0:4873              # listen on all addresses (INADDR_ANY)</span></span><br><span class="line"><span class="comment"># - https://example.org:4873  # if you want to use https</span></span><br><span class="line"><span class="comment"># - &quot;[::1]:4873&quot;                # ipv6</span></span><br><span class="line"><span class="comment"># - unix:/tmp/verdaccio.sock    # unix socket</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The HTTPS configuration is useful if you do not consider use a HTTP Proxy</span></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#https</span></span><br><span class="line"><span class="comment"># https:</span></span><br><span class="line"><span class="comment">#   key: ./path/verdaccio-key.pem</span></span><br><span class="line"><span class="comment">#   cert: ./path/verdaccio-cert.pem</span></span><br><span class="line"><span class="comment">#   ca: ./path/verdaccio-csr.pem</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#proxy</span></span><br><span class="line"><span class="comment"># http_proxy: http://something.local/</span></span><br><span class="line"><span class="comment"># https_proxy: https://something.local/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/configuration#notifications</span></span><br><span class="line"><span class="comment"># notify:</span></span><br><span class="line"><span class="comment">#   method: POST</span></span><br><span class="line"><span class="comment">#   headers: [&#123; &quot;Content-Type&quot;: &quot;application/json&quot; &#125;]</span></span><br><span class="line"><span class="comment">#   endpoint: https://usagge.hipchat.com/v2/room/3729485/notification?auth_token=mySecretToken</span></span><br><span class="line"><span class="comment">#   content: &#x27;&#123;&quot;color&quot;:&quot;green&quot;,&quot;message&quot;:&quot;New package published: * &#123;&#123; name &#125;&#125;*&quot;,&quot;notify&quot;:true,&quot;message_format&quot;:&quot;text&quot;&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">middlewares:</span></span><br><span class="line"><span class="attr">audit:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://verdaccio.org/docs/logger</span></span><br><span class="line"><span class="comment"># log settings</span></span><br><span class="line"><span class="attr">logs:</span> &#123; <span class="attr">type:</span> <span class="string">stdout</span>, <span class="attr">format:</span> <span class="string">pretty</span>, <span class="attr">level:</span> <span class="string">http</span> &#125;</span><br><span class="line"><span class="comment">#experiments:</span></span><br><span class="line"><span class="comment">#  # support for npm token command</span></span><br><span class="line"><span class="comment">#  token: false</span></span><br><span class="line"><span class="comment">#  # enable tarball URL redirect for hosting tarball with a different server, the tarball_url_redirect can be a template string</span></span><br><span class="line"><span class="comment">#  tarball_url_redirect: &#x27;https://mycdn.com/verdaccio/$&#123;packageName&#125;/$&#123;filename&#125;&#x27;</span></span><br><span class="line"><span class="comment">#  # the tarball_url_redirect can be a function, takes packageName and filename and returns the url, when working with a js configuration file</span></span><br><span class="line"><span class="comment">#  tarball_url_redirect(packageName, filename) &#123;</span></span><br><span class="line"><span class="comment">#    const signedUrl = // generate a signed url</span></span><br><span class="line"><span class="comment">#    return signedUrl;</span></span><br><span class="line"><span class="comment">#  &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># translate your registry, api i18n not available yet</span></span><br><span class="line"><span class="comment"># i18n:</span></span><br><span class="line"><span class="comment"># list of the available translations https://github.com/verdaccio/verdaccio/blob/master/packages/plugins/ui-theme/src/i18n/ABOUT_TRANSLATIONS.md</span></span><br><span class="line"><span class="comment">#   web: en-US</span></span><br></pre></td></tr></table></figure></li>
+<li><p>注意storage, plugins为主机存储的目录（即在/home/user/verdaccio/目录下的两个文件夹）;可自定义位置，建议和conf放在一起便于管理</p>
+</li>
+<li><p>注意uplinks下的配置，默认私有npm没有的包会从该配置下载， 可配多个，下载时会依次查找相应的包， 建议配置一个即可</p>
+</li>
+<li><p>注意publish， 如果有上传私有包的需求，可将allow_offline设置为true</p>
+</li>
+</ol>
+<h3 id="1-4-优化启动流程，通过docker-compose启动"><a href="#1-4-优化启动流程，通过docker-compose启动" class="headerlink" title="1.4 优化启动流程，通过docker-compose启动"></a>1.4 优化启动流程，通过docker-compose启动</h3><p>在/home/user/verdaccio目录下新建docker-compose.yml文件, 内容如下</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">    <span class="attr">verdaccio:</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">verdaccio/verdaccio</span></span><br><span class="line">        <span class="attr">container_name:</span> <span class="string">&quot;verdaccio&quot;</span></span><br><span class="line">        <span class="attr">environment:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">VERDACCIO_PORT=4873</span></span><br><span class="line">        <span class="attr">prots:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">&quot;4873:4873&quot;</span></span><br><span class="line">        <span class="attr">volumes:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">&quot;/home/user/verdaccio/storage:/verdaccio/storage&quot;</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">&quot;/home/user/verdaccio/conf:/verdaccio/conf&quot;</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">&quot;/home/user/verdaccio/plugins:/verdaccio/plugins&quot;</span></span><br><span class="line">        <span class="attr">network_mode:</span> <span class="string">&quot;bridge</span></span><br></pre></td></tr></table></figure>
+<p>通过docker-compose.yml启动docker，进入yml文件所在目录执行命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker-compose up -d   <span class="comment"># -d 是保持后台运行</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-通过私有仓库下载包"><a href="#2-通过私有仓库下载包" class="headerlink" title="2. 通过私有仓库下载包"></a>2. 通过私有仓库下载包</h2><h3 id="2-1-注册用户"><a href="#2-1-注册用户" class="headerlink" title="2.1 注册用户"></a>2.1 注册用户</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">set</span> registry https://prive.server.npm   <span class="comment">#设置npm registry为私有仓库地址（该地址为demo地址， 真实地址一般为http://localhost:4873, 可自行配置域名等等）</span></span><br><span class="line">npm adduser --registry https://prive.npm    <span class="comment">#添加npm用户, 会要求输入用户名，密码，邮箱，依次输入即可</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-2-校验是否注册成功"><a href="#2-2-校验是否注册成功" class="headerlink" title="2.2 校验是否注册成功"></a>2.2 校验是否注册成功</h3><p>打开<a target="_blank" rel="noopener" href="https://prive.server.npm后,/">https://prive.server.npm后，</a> 点击右上角<code>LOGIN</code>按钮打开登陆弹窗，输入刚刚注册的用户名和密码</p>
+<h3 id="2-3-发布私有npm包"><a href="#2-3-发布私有npm包" class="headerlink" title="2.3 发布私有npm包"></a>2.3 发布私有npm包</h3><p>开发好私有包后， 进入包的根目录输入<code>npm login</code>登录， 然后执行<code>npm publish</code>发布私有包，同github上传node_modules流程一致，可参考 <a href="/2022/11/22/github-module/">github上传node_modules</a> 中的1.6，1.7 且不需要配置.npmrc</p>
+<h3 id="2-4-注意"><a href="#2-4-注意" class="headerlink" title="2.4 注意"></a>2.4 注意</h3><p>verdaccio网站默认只会显示上传的私有npm包， 如果想显示已经缓存的npm官网的包， 需要更改/verdaccio/storage/.verdaccio-db.json文件<br>自己将想显示的包名添加到list中</p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://avatars.githubusercontent.com/u/38529839?v=4" alt="Kenevy">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Kenevy
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2022/12/12/prived-npm-server/" target="_blank">内网搭建私有npm仓库</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：简单地活着, 肆意又精彩.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Live For Code</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categorie/%E5%B7%A5%E5%85%B7/">工具</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tag/yarn/">yarn</a>
+                
+                    <a href="/tag/npm/">npm</a>
+                
+                    <a href="/tag/node-modules/">node_modules</a>
+                
+                    <a href="/tag/package/">package</a>
+                
+                    <a href="/tag/verdaccio/">verdaccio</a>
+                
+                    <a href="/tag/docker/">docker</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+            
+                <a href="/2022/11/22/github-module/" class="next-prefix">» </a> 下一篇：    <a href="/2022/11/22/github-module/" title="发布于 2022-11-22 03:02">GitHub上传私有npm包及使用</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="/assets/hexo/css/search.css">
+<script type="text/javascript" src="/assets/hexo/js/iscroll.js"></script>
+<script type="text/javascript" src="/assets/hexo/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="/assets/hexo/css/APlayer.css">
+        <script type="text/javascript" src="/assets/hexo/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="/assets/hexo/js/Meting.min.js"></script>
+        <meting-js id="114112095" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'first19326',
+        GitHubRepositories : 'Hexo-LiveForCodex',
+
+        BlogUser      : 'Kenevy',
+        BlogAvatar    : 'https://avatars.githubusercontent.com/u/38529839?v=4',
+        BlogStartDate : '2020-06-03',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Live For Code',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : '/assets/hexo/image/website/logo.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                '/assets/hexo/image/header/home.jpg',
+            
+                '/assets/hexo/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                '/assets/hexo/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '归档',
+                    href   : '/archive',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/kenevy'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : false,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '/assets/hexo/image/donate/alipay.png',
+            wechat  : '/assets/hexo/image/donate/wechat.png'
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : 'SK710PA2AC',
+            apiKey        : '765693a7f9bfa264d63155fdc6bcf68c',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'YSr7AcO1kAh7V5oideEUz4Sy-gzGzoHsz',
+            appKey         : 'hWlOkQDUaq0gQCfzaNU7Ta9T',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : '/assets/hexo/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '114112095', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : '/assets/hexo/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : '/assets/hexo/css/APlayer.css',
+            archive          : '/assets/hexo/css/archive.css',
+            donate           : '/assets/hexo/css/donate.css',
+            fancybox         : '/assets/hexo/css/jquery.fancybox.css',
+            footer           : '/assets/hexo/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : '/assets/hexo/css/index.css',
+            menuBubble       : '/assets/hexo/css/menu-bubble.css',
+            page             : '/assets/hexo/css/page.css',
+            post             : '/assets/hexo/css/post.css',
+            search           : '/assets/hexo/css/search.css',
+            tocbot           : '/assets/hexo/css/tocbot.css',
+            normal           : '/assets/hexo/css/normal.css',
+            night            : '/assets/hexo/css/night.css',
+            clipboard        : '/assets/hexo/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : '/assets/hexo/js/APlayer.min.js',
+            config           : '/assets/hexo/js/require.config.js',
+            index            : '/assets/hexo/js/index.js',
+            instantSearch    : '/assets/hexo/js/instantsearch.min.js',
+            jQuery           : '/assets/hexo/js/jquery-3.4.1.min.js',
+            loading          : '/assets/hexo/js/loading.js',
+            meting           : '/assets/hexo/js/Meting.min.js',
+            iscroll          : '/assets/hexo/js/iscroll.js',
+            require          : '/assets/hexo/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : '/assets/hexo/font/LongCang.css',
+            Monda      : '/assets/hexo/font/Monda.css',
+            NotoSansSC : '/assets/hexo/font/NotoSansSC.css',
+            Playball   : '/assets/hexo/font/Playball.css',
+            PTMono     : '/assets/hexo/font/PTMono.css',
+            RobotoSlab : '/assets/hexo/font/RobotoSlab.css',
+            Rosario    : '/assets/hexo/font/Rosario.css',
+            UbuntuMono : '/assets/hexo/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '简单地活着, 肆意又精彩.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Live For Code'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="/assets/hexo/js/index.js"></script>
+</body>
+</html>
