@@ -38,16 +38,16 @@ GitHub Packages看起来是这个样子
     3. 点击Generate new token -> Generate new token(classic)
     4. 填写note, explration
     5. 勾选权限如下(最低限制)
-    ![''](/assets/githubs/20221122153153.png)
+![''](/assets/githubs/20221122153153.png)
     6. 点击Generat token
     7. 注意保存token， 只显示一次
-    ![''](/assets/githubs/20221122153525.png)
+![''](/assets/githubs/20221122153525.png)
 
 ### 1.4 创建npm包
 
     1. 进入刚刚clone的项目目录下
     2. 进行初始化, 命令npm init --scope=kenevy中的kenevy必须是你的github用户名， 其他随便填写一些description和author，然后一路回车就可以。
-    ![''](/assets/githubs/20221122153855.png)
+![''](/assets/githubs/20221122153855.png)
 
 ### 1.5 配置
 
