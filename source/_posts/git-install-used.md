@@ -91,6 +91,9 @@ $ git tag -d tagname                               // 删除tag
 $ git push origin :refs/tags/<tagname>             // 删除远程tag
 ```
 ``` bash
+git remote prune origin                            // 同步远程已删除分支到本地
+```
+``` bash
 $ git stash save "save massage"                    // 执行存储,添加备注,只有git stash也可以
 $ git stash list                                   // 查看stash了哪些存储
 $ git stash show                                   // 显示做了哪些改动， 默认显示第一个, 如果需要显示其他存储，后面加stash@{$num}, egg: git stash show stash@{1}
