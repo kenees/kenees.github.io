@@ -91,7 +91,7 @@ $ git tag -d tagname                               // 删除tag
 $ git push origin :refs/tags/<tagname>             // 删除远程tag
 ```
 ``` bash
-git remote prune origin                            // 同步远程已删除分支到本地
+$ git remote prune origin                            // 同步远程已删除分支到本地
 ```
 ``` bash
 $ git stash save "save massage"                    // 执行存储,添加备注,只有git stash也可以
