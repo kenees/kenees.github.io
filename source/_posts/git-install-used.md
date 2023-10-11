@@ -67,6 +67,9 @@ $ git branch -d branchname                         // 删除本地分支
 $ git push origin --delete branchname              // 删除远程分支
 ```
 ``` bash
+$ git fetch --prune                                // 同步远程分支列表
+```
+``` bash
 $ git tag tagName                                  // 新增tag
 ```
 ``` bash
